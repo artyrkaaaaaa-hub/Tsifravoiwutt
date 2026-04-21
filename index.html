@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Цифровой Щит | Мошенник не пройдет</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-light: #f8fafc;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --accent-purple: #7c3aed;
+      --accent-cyan: #06b6d4;
+      --accent-pink: #ec4899;
+      --accent-gold: #d97706;
+      --text-dark: #0f172a;
+      --text-soft: #334155;
+      --border-light: #e2e8f0;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f5f3ff 0%, #e0e7ff 50%, #fce7f3 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .app-container {
+      max-width: 800px;
+      width: 100%;
+      height: 95vh;
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      border-radius: 2rem;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-md);
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 0.3rem;
+      min-height: 0;
+    }
+
+    .scroll-area::-webkit-scrollbar {
+      width: 4px;
+    }
+    .scroll-area::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+    .scroll-area::-webkit-scrollbar-thumb {
+      background: var(--accent-purple);
+      border-radius: 10px;
+    }
+
+    .slide-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+      width: 100%;
+    }
+
+    .educational-img {
+      width: 100%;
+      height: auto;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 1.5rem;
+      border: 2px solid var(--accent-purple);
+      box-shadow: var(--shadow-md);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-family: 'Space Grotesk', monospace;
+      font-weight: 700;
+      background: linear-gradient(135deg, #7c3aed, #06b6d4, #ec4899);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.3rem;
+    }
+    h2 {
+      font-size: 1.4rem;
+      color: var(--text-dark);
+      font-weight: 700;
+    }
+    h3 {
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    .text-dark { color: var(--text-dark); }
+    .text-soft { color: var(--text-soft); }
+    .text-center { text-align: center; }
+    .mt-2 { margin-top: 0.8rem; }
+    .mt-3 { margin-top: 1.2rem; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 0.8rem; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+
+    .card {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.8rem;
+      margin-bottom: 0.8rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-light);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+      border: none;
+      padding: 0.7rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+    }
+
+    .chapter-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 0.7rem;
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      cursor: pointer;
+      border: 1px solid var(--border-light);
+      transition: all 0.2s;
+    }
+    .chapter-card:hover {
+      border-color: var(--accent-purple);
+      transform: translateX(5px);
+      box-shadow: var(--shadow-sm);
+    }
+    .chapter-emoji { font-size: 1.8rem; }
+
+    .option {
+      background: white;
+      border-radius: 1rem;
+      padding: 0.7rem 0.9rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      cursor: pointer;
+      border: 1px solid var(--border-light);
+      transition: all 0.2s;
+    }
+    .option:hover {
+      border-color: var(--accent-purple);
+      transform: translateX(5px);
+    }
+    .option.selected {
+      background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+    }
+    .option-letter {
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+      border-radius: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    .phone-screen {
+      background: #1a1a2e;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      margin: 0.8rem 0;
+      color: white;
+    }
+    .incoming-title {
+      text-align: center;
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      color: #a78bfa;
+      margin-bottom: 0.6rem;
+    }
+    .caller-name {
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    .message-left {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 0.8rem;
+      padding: 0.6rem;
+      margin-bottom: 0.6rem;
+      border-left: 3px solid #f472b6;
+      font-size: 0.85rem;
+    }
+    .message-right {
+      background: rgba(124, 58, 237, 0.3);
+      border-radius: 0.8rem;
+      padding: 0.6rem;
+      margin-bottom: 0.6rem;
+      margin-left: 1rem;
+      border-right: 3px solid #06b6d4;
+      font-size: 0.85rem;
+    }
+    .next-hint { text-align: right; color: #a78bfa; font-size: 0.65rem; margin-top: 0.6rem; }
+
+    .progress-bar {
+      background: #e2e8f0;
+      border-radius: 1rem;
+      height: 6px;
+      overflow: hidden;
+      margin: 0.4rem 0;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+      border-radius: 1rem;
+      transition: width 0.4s;
+    }
+    .badge-complete { color: var(--accent-gold); font-size: 0.65rem; font-weight: 600; }
+    .btn-group { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.8rem; }
+    .emoji-big { font-size: 2rem; }
+  </style>
+</head>
+<body>
+  <div id="app" class="app-container"></div>
+
+  <script>
+    (function() {
+      // ========== ВАШИ ССЫЛКИ НА КАРТИНКИ ==========
+      const IMAGE_SLIDES = [
+        "https://i.postimg.cc/Vk0GLMm9/3CJMc8Wzc-L-b-XRPom-Rb8-Zs1p-Sd-QKa-Qw-pw40Ie-Ajhavb-CBz-TJu-TAAqb6x8zpx6kk54m-PONa6sp-O9P6ju-PKGo-L.jpg",
+        "https://i.postimg.cc/pV8KTZF6/09j-Gd-h-Jph8-Q9Yk-LLCXGuq-PMVJ-ZIfekz-EQbi-Poohl-Xxq-G9c7f-UWibg-NY6Yw12p-GOrh-Ss-H9m-w-RE-ps-Ihud.jpg",
+        "https://i.postimg.cc/1XHtFfSd/P5Ch-F9x-KAKp88e2d4Ln34j9s1nz-Wmhfh-VV1Sa-Z9y2Erz-Is-SVFe-Om2Cm3-xgd-Qx5i6JJVcl-Law-IOMz-OFQV1KXx0l.jpg",
+        "https://i.postimg.cc/hjRP39tW/k6rfii-IRx3SVYg-74q9sd-Qafrmj-SJwwoo-Alf3g-WJt-Bau-qe-P5W-w-Azj-EPYQ-RGzq-VG5Mn-Vys-z9v42JUO0Kliv.jpg"
+      ];
+
+      const chapters = [
+        {
+          id: 1, emoji: "📦", title: "Золотая доставка",
+          storyIntro: "Анатолий заказал новый смартфон на маркетплейсе. Он постоянно проверяет статус заказа, и вдруг...",
+          phoneIncoming: { header: "ВХОДИЛИ", caller: "СЛУЖБА ДОСТАВКИ", nextText: "ДАЛЕЕ →" },
+          phoneDialog: { header: "входящий", caller: "СЛУЖБА ДОСТАВКИ", scammerMsg: "— Добрый день! Курьерская служба «Маркетплейс». Ваш заказ NM4567839 уже у курьера! Готовы принять сегодня?", victimMsg: "Да, всё верно! Отлично! А когда примерно ждать?", nextText: "ДАЛЕЕ →" },
+          question: "Что делать, если курьер просит перейти по ссылке для оплаты?",
+          options: [
+            { id: "A", text: "Перейти по ссылке и ввести данные карты" },
+            { id: "B", text: "Положить трубку и проверить статус заказа в официальном приложении" },
+            { id: "C", text: "Попросить прислать ссылку в СМС, чтобы оплатить позже" },
+            { id: "D", text: "Отказаться от заказа" }
+          ],
+          correct: "B",
+          explanation: "Настоящие службы доставки никогда не просят оплату через сторонние ссылки! Всегда проверяйте информацию в официальном приложении магазина."
+        },
+        {
+          id: 2, emoji: "🏦", title: "Служба безопасности",
+          storyIntro: "Анатолию приходит СМС о подозрительном входе в личный кабинет банка. Сердце ёкнуло — неужели взломали? Сразу после этого звонит телефон...",
+          phoneDialogNoImg: { caller: "БАНК РОССИИ", scammerMsg: "Анатолий, это служба безопасности банка. На ваше имя пытаются оформить кредит на 500 000 рублей. Чтобы отменить заявку, срочно назовите код из СМС.", victimMsg: "Какой код? Мне только что пришло сообщение... Сейчас продиктую." },
+          question: "Ваши действия при звонке 'из банка' с просьбой назвать код?",
+          options: [
+            { id: "A", text: "Назвать код, чтобы спасти свои деньги" },
+            { id: "B", text: "Сбросить звонок и позвонить в банк по номеру с карты" },
+            { id: "C", text: "Попросить перезвонить позже" },
+            { id: "D", text: "Записать код и отправить в ответном СМС" }
+          ],
+          correct: "B",
+          explanation: "Банк НИКОГДА не запрашивает коды из СМС по телефону! Это главное правило безопасности."
+        },
+        {
+          id: 3, emoji: "👮", title: "Капитан полиции",
+          storyIntro: "Обычный вечер. Анатолий смотрит сериал, когда раздаётся звонок с незнакомого номера...",
+          phoneDialogNoImg: { caller: "МВД РОССИИ", scammerMsg: "Это капитан Сидоров, отдел по борьбе с мошенничеством. Ваши данные скомпрометированы. Для защиты средств необходимо перевести деньги на безопасный счёт.", victimMsg: "Ой, капитан, а что мне делать? Я очень волнуюсь за свои сбережения..." },
+          question: "Что делать, если 'полицейский' просит перевести деньги на 'безопасный счёт'?",
+          options: [
+            { id: "A", text: "Выполнить инструкции, ведь это полиция" },
+            { id: "B", text: "Прекратить разговор — полиция так не работает" },
+            { id: "C", text: "Попросить прислать документы на почту" },
+            { id: "D", text: "Перевести часть денег для проверки" }
+          ],
+          correct: "B",
+          explanation: "Полиция НИКОГДА не просит переводить деньги на 'безопасные счета'! Это классическая схема мошенничества."
+        },
+        {
+          id: 4, emoji: "💼", title: "Выгодная работа",
+          storyIntro: "Анатолий ищет подработку и разместил резюме на сайте вакансий. Приходит сообщение в мессенджер от 'крупной компании'...",
+          phoneDialogNoImg: { caller: "HR МЕНЕДЖЕР", scammerMsg: "Поздравляем! Вы прошли отбор на удалённую работу с зарплатой 150 000₽/мес. Для оформления нужно оплатить регистрационный взнос 3000₽.", victimMsg: "Вау, это супер! А куда переводить деньги?" },
+          question: "Вам предлагают высокооплачиваемую работу, но просят оплатить 'взнос'. Ваши действия?",
+          options: [
+            { id: "A", text: "Оплатить взнос — это инвестиция в карьеру" },
+            { id: "B", text: "Отказаться — честные работодатели не берут деньги с соискателей" },
+            { id: "C", text: "Отправить паспорт, но не платить" },
+            { id: "D", text: "Попросить скидку на взнос" }
+          ],
+          correct: "B",
+          explanation: "Настоящие работодатели НИКОГДА не просят деньги за трудоустройство! Это мошенничество."
+        },
+        {
+          id: 5,
+          emoji: "⚠️",
+          title: "Мошенник Не Пройдет",
+          storyIntro: "",
+          slides: IMAGE_SLIDES,
+          question: "Что делать, если предлагают быстро разбогатеть?",
+          options: [
+            { id: "A", text: "Вложить небольшую пробную сумму для проверки" },
+            { id: "B", text: "Инвестировать крупную сумму, пока акция не закончилась" },
+            { id: "C", text: "Проверить компанию в официальном реестре Банка России" },
+            { id: "D", text: "Написать консультанту в чат, чтобы узнать подробности" }
+          ],
+          correct: "B",
+          explanation: "Никогда не вкладывайте деньги в сомнительные проекты, обещающие сверхдоходы. Лучшая защита — игнорировать такие предложения и проверять информацию в официальных источниках."
+        }
+      ];
+
+      // Перемешиваем варианты для глав 1-4
+      for (let i = 0; i < chapters.length - 1; i++) {
+        const ch = chapters[i];
+        const opts = [...ch.options];
+        for (let j = opts.length - 1; j > 0; j--) {
+          const k = Math.floor(Math.random() * (j + 1));
+          [opts[j], opts[k]] = [opts[k], opts[j]];
+        }
+        const newCorrectId = opts.find(opt => opt.text === ch.options.find(o => o.id === ch.correct).text).id;
+        ch.options = opts;
+        ch.correct = newCorrectId;
+      }
+      chapters[4].correct = "B";
+
+      let currentScreen = 'welcome';
+      let activeChapter = null;
+      let gameStep = 'story';
+      let selectedAnswer = null;
+      let completedChapters = [];
+      let slideIndex = 0;
+
+      function saveComplete(id) {
+        if (!completedChapters.includes(id)) completedChapters.push(id);
+      }
+
+      function confetti() {
+        for (let i = 0; i < 50; i++) {
+          const el = document.createElement('div');
+          el.style.position = 'fixed';
+          el.style.width = '8px';
+          el.style.height = '12px';
+          el.style.background = 'hsl(' + (Math.random() * 60 + 260) + ', 80%, 60%)';
+          el.style.left = Math.random() * 100 + '%';
+          el.style.top = '-20px';
+          el.style.borderRadius = '2px';
+          el.style.pointerEvents = 'none';
+          el.style.zIndex = '9999';
+          document.body.appendChild(el);
+          const dur = Math.random() * 2 + 2;
+          el.animate([
+            { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+            { transform: 'translate(' + (Math.random() * 300 - 150) + 'px, 800px) rotate(' + (Math.random() * 720) + 'deg)', opacity: 0 }
+          ], { duration: dur * 1000 });
+          setTimeout(() => el.remove(), dur * 1000);
+        }
+      }
+
+      function render() {
+        const root = document.getElementById('app');
+        if (!root) return;
+
+        if (currentScreen === 'welcome') {
+          root.innerHTML = `
+            <div style="display:flex;flex-direction:column;height:100%;">
+              <div class="scroll-area text-center">
+                <div class="emoji-big">🛡️</div>
+                <h1>Цифровой Щит</h1>
+                <div class="card" style="margin: 0.8rem 0;"><p class="text-soft">Пройди тест и проверь, сможешь ли ты защититься от мошенников</p></div>
+                <p class="text-soft" style="font-size:0.75rem;">Анатолий рассчитывает на твою помощь</p>
+              </div>
+              <button class="btn mt-2" id="startBtn">⚡ начать тест ⚡</button>
+            </div>
+          `;
+          document.getElementById('startBtn')?.addEventListener('click', () => {
+            currentScreen = 'chapters';
+            render();
+          });
+          return;
+        }
+
+        if (currentScreen === 'chapters') {
+          const progress = (completedChapters.length / chapters.length) * 100;
+          root.innerHTML = `
+            <div style="display:flex;flex-direction:column;height:100%;">
+              <h2 class="text-center" style="font-size:1.3rem;">Сценарии угроз</h2>
+              <div class="card" style="padding:0.6rem;">
+                <div class="flex-between"><span class="text-soft" style="font-size:0.8rem;">Защита активирована</span><span style="color:var(--accent-purple); font-weight:600; font-size:0.8rem;">${completedChapters.length}/${chapters.length}</span></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:${progress}%;"></div></div>
+              </div>
+              <div class="scroll-area">
+                ${chapters.map(ch => `
+                  <div class="chapter-card" data-id="${ch.id}">
+                    <div class="chapter-emoji">${ch.emoji}</div>
+                    <div style="flex:1;">
+                      <div class="flex-between"><span style="color:var(--accent-purple); font-weight:600; font-size:0.8rem;">Глава ${ch.id}</span>${completedChapters.includes(ch.id) ? '<span class="badge-complete">✓ ЗАЩИЩЕНО</span>' : ''}</div>
+                      <h3 style="font-size:0.95rem;">${ch.title}</h3>
+                      <button class="btn" style="padding:0.25rem 0.7rem; width:auto; margin-top:0.3rem; font-size:0.7rem;" data-start="${ch.id}">📖 Открыть главу</button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+              ${completedChapters.length === chapters.length ? `<div class="card text-center mt-2"><span style="font-size:1.3rem;">🏆</span><p class="text-dark" style="font-weight:600; font-size:0.8rem;">Анатолий спасён! Ты настоящий защитник</p></div>` : ''}
+            </div>
+          `;
+          document.querySelectorAll('[data-start]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const id = parseInt(btn.dataset.start);
+              activeChapter = chapters.find(c => c.id === id);
+              gameStep = 'story';
+              selectedAnswer = null;
+              slideIndex = 0;
+              currentScreen = 'game';
+              render();
+            });
+          });
+          document.querySelectorAll('.chapter-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+              if (e.target.tagName === 'BUTTON') return;
+              const id = parseInt(card.dataset.id);
+              activeChapter = chapters.find(c => c.id === id);
+              gameStep = 'story';
+              selectedAnswer = null;
+              slideIndex = 0;
+              currentScreen = 'game';
+              render();
+            });
+          });
+          return;
+        }
+
+        if (currentScreen === 'game' && activeChapter) {
+          const ch = activeChapter;
+
+          if (gameStep === 'story') {
+            if (ch.id === 5) {
+              if (slideIndex < ch.slides.length) {
+                root.innerHTML = `
+                  <div style="display:flex;flex-direction:column;height:100%;">
+                    <div class="scroll-area">
+                      <div class="slide-container">
+                        <img class="educational-img" src="${ch.slides[slideIndex]}" alt="Обучающее изображение" onerror="this.src='https://via.placeholder.com/600x800?text=Ошибка+загрузки+картинки'">
+                      </div>
+                    </div>
+                    <button class="btn mt-2" id="nextSlideBtn">Далее →</button>
+                  </div>
+                `;
+                document.getElementById('nextSlideBtn')?.addEventListener('click', () => {
+                  slideIndex++;
+                  render();
+                });
+                return;
+              } else {
+                gameStep = 'question';
+                render();
+                return;
+              }
+            } else {
+              root.innerHTML = `
+                <div style="display:flex;flex-direction:column;height:100%;">
+                  <div class="scroll-area">
+                    <div class="flex-between"><span class="emoji-big">${ch.emoji}</span><span class="badge-complete">Глава ${ch.id}</span></div>
+                    <h2>${ch.title}</h2>
+                    <div class="card"><p class="text-dark" style="font-size:0.9rem;">${ch.storyIntro}</p></div>
+                    ${ch.id === 1 ? `
+                      <div class="phone-screen">
+                        <div class="incoming-title">${ch.phoneIncoming.header}</div>
+                        <div class="caller-name">${ch.phoneIncoming.caller}</div>
+                        <div class="next-hint">${ch.phoneIncoming.nextText}</div>
+                      </div>
+                    ` : '<div class="card text-center text-soft" style="font-size:0.8rem;">⌛ приготовься к звонку...</div>'}
+                  </div>
+                  <button class="btn mt-2" id="nextStoryBtn">📞 Далее →</button>
+                </div>
+              `;
+              document.getElementById('nextStoryBtn')?.addEventListener('click', () => {
+                gameStep = 'call';
+                render();
+              });
+              return;
+            }
+          }
+
+          if (gameStep === 'call' && ch.id !== 5) {
+            root.innerHTML = `
+              <div style="display:flex;flex-direction:column;height:100%;">
+                <div class="scroll-area">
+                  ${ch.id === 1 ? `
+                    <div class="phone-screen">
+                      <div class="incoming-title">${ch.phoneDialog.header}</div>
+                      <div class="caller-name">${ch.phoneDialog.caller}</div>
+                      <div class="message-left">${ch.phoneDialog.scammerMsg}</div>
+                      <div class="message-right">${ch.phoneDialog.victimMsg}</div>
+                      <div class="next-hint">${ch.phoneDialog.nextText}</div>
+                    </div>
+                  ` : `
+                    <div class="phone-screen">
+                      <div class="incoming-title">входящий</div>
+                      <div class="caller-name">${ch.phoneDialogNoImg.caller}</div>
+                      <div class="message-left">${ch.phoneDialogNoImg.scammerMsg}</div>
+                      <div class="message-right">${ch.phoneDialogNoImg.victimMsg}</div>
+                      <div class="next-hint">ДАЛЕЕ →</div>
+                    </div>
+                  `}
+                </div>
+                <button class="btn mt-2" id="nextCallBtn">🎙️ Ответить →</button>
+              </div>
+            `;
+            document.getElementById('nextCallBtn')?.addEventListener('click', () => {
+              gameStep = 'question';
+              render();
+            });
+            return;
+          }
+
+          if (gameStep === 'question') {
+            root.innerHTML = `
+              <div style="display:flex;flex-direction:column;height:100%;">
+                <div class="scroll-area">
+                  <div class="card card-glow" style="margin-bottom:0.8rem;">
+                    <p class="text-dark" style="font-weight:500; font-size:0.95rem;">${ch.question}</p>
+                  </div>
+                  ${ch.options.map(opt => `
+                    <div class="option ${selectedAnswer === opt.id ? 'selected' : ''}" data-opt="${opt.id}">
+                      <div class="option-letter">${opt.id}</div>
+                      <span class="text-dark" style="font-size:0.85rem;">${opt.text}</span>
+                    </div>
+                  `).join('')}
+                </div>
+                <button class="btn mt-2" id="confirmBtn" ${!selectedAnswer ? 'style="opacity:0.6;"' : ''}>🔒 подтвердить выбор</button>
+              </div>
+            `;
+            document.querySelectorAll('.option').forEach(el => {
+              el.addEventListener('click', () => {
+                selectedAnswer = el.dataset.opt;
+                render();
+              });
+            });
+            document.getElementById('confirmBtn')?.addEventListener('click', () => {
+              if (!selectedAnswer) return;
+              const isCorrect = (selectedAnswer === ch.correct);
+              if (isCorrect && !completedChapters.includes(ch.id)) {
+                saveComplete(ch.id);
+                confetti();
+              }
+              gameStep = 'result';
+              render();
+            });
+            return;
+          }
+
+          if (gameStep === 'result') {
+            const isWin = (selectedAnswer === ch.correct);
+            const correctOpt = ch.options.find(o => o.id === ch.correct);
+            root.innerHTML = `
+              <div style="display:flex;flex-direction:column;height:100%;">
+                <div class="scroll-area text-center">
+                  <div style="font-size:2.5rem;">${isWin ? '🏆' : '🔄'}</div>
+                  <h2 style="color: ${isWin ? '#7c3aed' : '#ec4899'}; font-size:1.3rem;">${isWin ? 'Верно!' : 'Почти...'}</h2>
+                  <div class="card" style="margin:0.8rem 0;">
+                    <p class="text-dark" style="font-size:0.85rem;">${ch.explanation}</p>
+                    <div class="flex-between" style="margin-top:0.6rem; background:#f1f5f9; border-radius:0.8rem; padding:0.5rem;">
+                      <div class="option-letter" style="width:28px;height:28px; font-size:0.8rem;">${ch.correct}</div>
+                      <span class="text-dark" style="font-weight:500; font-size:0.8rem;">${correctOpt.text}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="btn-group">
+                  <button class="btn" id="backBtn">◀ К списку сценариев</button>
+                  ${ch.id < 5 ? '<button class="btn" id="nextBtn">▶ Следующая глава</button>' : ''}
+                </div>
+              </div>
+            `;
+            document.getElementById('backBtn')?.addEventListener('click', () => {
+              currentScreen = 'chapters';
+              render();
+            });
+            if (ch.id < 5) {
+              document.getElementById('nextBtn')?.addEventListener('click', () => {
+                activeChapter = chapters.find(c => c.id === ch.id + 1);
+                gameStep = 'story';
+                selectedAnswer = null;
+                slideIndex = 0;
+                render();
+              });
+            }
+            return;
+          }
+        }
+      }
+
+      render();
+    })();
+  </script>
+</body>
+</html>
